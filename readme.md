@@ -377,3 +377,31 @@ decrypted_hex_text = ctypes.cast(char_arr_res, ctypes.c_char_p)
 print("********** Result is **********")
 print(int(decrypted_hex_text.value.decode("utf-8"), 16))
 
+WSL:venky:venky
+
+https://github.com/ibarrond/Pyfhel/issues/117#issuecomment-1108779438
+
+
+from Pyfhel import Pyfhel, PyPtxt, PyCtxt
+homomorphic = Pyfhel()
+
+def initilization(long_p):
+    if homomorphic.is_context_empty():
+        homomorphic.contextGen(long_p)
+        homomorphic.keyGen()
+        return None
+
+def encryption(num):
+    initilization(65537)
+    encoded_num = homomorphic.encodeInt(num)
+    return homomorphic.encrypt(encoded_num)
+
+r1 = encryption(4)
+print("encrypted Data: ",r1)
+br1 = PyCtxt()
+br1 = PyCtxt.to_bytes(r1)
+print("Encoded with to_bytes: ", br1)
+
+fr1 = PyCtxt()
+fr1.from_bytes(br1, encoding='int')
+print(homomorphic.decryptInt(fr1))
